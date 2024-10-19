@@ -8,15 +8,15 @@ import (
 	"io"
 	"os"
 
-	"github.com/yofu/dxf/block"
-	"github.com/yofu/dxf/class"
-	"github.com/yofu/dxf/color"
-	"github.com/yofu/dxf/entity"
-	"github.com/yofu/dxf/format"
-	"github.com/yofu/dxf/handle"
-	"github.com/yofu/dxf/header"
-	"github.com/yofu/dxf/object"
-	"github.com/yofu/dxf/table"
+	"github.com/scantrust/dxf-golang/block"
+	"github.com/scantrust/dxf-golang/class"
+	"github.com/scantrust/dxf-golang/color"
+	"github.com/scantrust/dxf-golang/entity"
+	"github.com/scantrust/dxf-golang/format"
+	"github.com/scantrust/dxf-golang/handle"
+	"github.com/scantrust/dxf-golang/header"
+	"github.com/scantrust/dxf-golang/object"
+	"github.com/scantrust/dxf-golang/table"
 )
 
 // Drawing contains DXF drawing data.
@@ -234,6 +234,13 @@ func (d *Drawing) Circle(x, y, z, r float64) (*entity.Circle, error) {
 	c := entity.NewCircle()
 	c.Center = []float64{x, y, z}
 	c.Radius = r
+	c.SetLayer(d.CurrentLayer)
+	d.AddEntity(c)
+	return c, nil
+}
+
+func (d *Drawing) Rectangle(x, y, width, height float64) (*entity.Solid, error) {
+	c := entity.NewRect2D(x, y, width, height)
 	c.SetLayer(d.CurrentLayer)
 	d.AddEntity(c)
 	return c, nil
