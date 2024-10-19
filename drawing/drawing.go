@@ -239,6 +239,13 @@ func (d *Drawing) Circle(x, y, z, r float64) (*entity.Circle, error) {
 	return c, nil
 }
 
+func (d *Drawing) Rectangle(x, y, width, height float64) (*entity.Solid, error) {
+	c := entity.NewRect2D(x, y, width, height)
+	c.SetLayer(d.CurrentLayer)
+	d.AddEntity(c)
+	return c, nil
+}
+
 // Arc creates a new ARC at (x, y, z) with radius r from start to end.
 func (d *Drawing) Arc(x, y, z, r, start, end float64) (*entity.Arc, error) {
 	c := entity.NewCircle()
