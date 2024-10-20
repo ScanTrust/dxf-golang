@@ -4,20 +4,22 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"strconv"
+	"strings"
 )
 
 // ASCII is Formatter for ASCII format.
 type ASCII struct {
-	buffer bytes.Buffer
-	float  string
+	buffer         bytes.Buffer
+	floatPrecision int
 }
 
 // NewASCII creates a new ASCII formatter.
 func NewASCII() *ASCII {
 	var b bytes.Buffer
 	return &ASCII{
-		buffer: b,
-		float:  "%.6f",
+		buffer:         b,
+		floatPrecision: 6,
 	}
 }
 
@@ -33,7 +35,7 @@ func (f *ASCII) WriteTo(w io.Writer) (int64, error) {
 
 // SetPrecision sets precision part for outputting floating point values.
 func (f *ASCII) SetPrecision(p int) {
-	f.float = fmt.Sprintf("%%.%df", p)
+	f.floatPrecision = p
 }
 
 // Output outputs data stored in the buffer in DXF format.
@@ -61,7 +63,7 @@ func (f *ASCII) Int(num int, val int) string {
 
 // Float outputs given code & floating point in DXF format.
 func (f *ASCII) Float(num int, val float64) string {
-	return fmt.Sprintf(fmt.Sprintf("%d\n%s\n", num, f.float), val)
+	return fmt.Sprintf("%d\n%s\n", num, FormatFloat(val, f.floatPrecision))
 }
 
 // WriteString appends string data to the buffer.
@@ -82,4 +84,12 @@ func (f *ASCII) WriteInt(num int, val int) {
 // WriteFloat appends floating point data to the buffer.
 func (f *ASCII) WriteFloat(num int, val float64) {
 	f.buffer.WriteString(f.Float(num, val))
+}
+
+func FormatFloat(val float64, maxPrecision int) string {
+	if val == float64(int64(val)) {
+		return fmt.Sprintf("%d", int64(val))
+	}
+	ret := strconv.FormatFloat(val, 'f', maxPrecision, 64)
+	return strings.TrimRight(ret, "0")
 }
