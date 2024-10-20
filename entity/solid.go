@@ -1,6 +1,8 @@
 package entity
 
-import "github.com/scantrust/dxf-golang/format"
+import (
+	"github.com/scantrust/dxf-golang/format"
+)
 
 type Vec = []float64
 
